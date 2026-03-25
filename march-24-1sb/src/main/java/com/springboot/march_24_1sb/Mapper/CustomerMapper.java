@@ -1,6 +1,7 @@
 package com.springboot.march_24_1sb.Mapper;
 
 import com.springboot.march_24_1sb.dto.CustomerDto;
+import com.springboot.march_24_1sb.dto.CustomerReqDto;
 import com.springboot.march_24_1sb.model.Customer;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
@@ -15,6 +16,14 @@ public class CustomerMapper {
         customer.setCity(customerDto.city());
 
         return customer;
+    }
+
+    public static CustomerDto CustEntToDto(Customer cust){
+        return new CustomerDto(
+                cust.getName(),
+                cust.getEmail(),
+                cust.getCity()
+        );
     }
 
 

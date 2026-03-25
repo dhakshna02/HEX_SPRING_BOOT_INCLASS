@@ -1,5 +1,6 @@
 package com.springboot.march_24_1sb.config;
 
+import com.springboot.march_24_1sb.exception.ResourceNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -41,5 +42,14 @@ public class GlobalException {
         Map<String, Object> map = new HashMap<>();
        map.put("message","IncorrectEnum");
        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
+    }
+
+    @ExceptionHandler(ResourceNotFound.class)
+    public ResponseEntity<?> handleResourceNotFound(
+            ResourceNotFound e
+    ){
+        Map<String,Object> map = new HashMap<>();
+        map.put("message",e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
     }
 }

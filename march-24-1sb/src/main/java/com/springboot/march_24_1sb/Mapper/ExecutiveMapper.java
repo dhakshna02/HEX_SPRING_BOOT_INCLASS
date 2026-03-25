@@ -14,4 +14,11 @@ public class ExecutiveMapper {
         return executive;
     }
 
+
+    public static ExecutiveDto EntToDto(Executive executive){
+        return new ExecutiveDto(
+                executive.getName(),
+                executive.getJobTitle()
+        );
+    }
 }
