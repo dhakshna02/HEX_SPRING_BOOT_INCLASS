@@ -18,4 +18,10 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
             (?2 IS NULL OR t.ticketPriority = ?2)
             """)
     List<Ticket> getTicketUsingFilter(TicketStatus status , TicketPriority priority);
+
+    @Query("""
+            select t from Ticket t
+            where t.customer.id = ?1
+            """)
+    List<Ticket> getAllTicketByCustomer(long customerid);
 }

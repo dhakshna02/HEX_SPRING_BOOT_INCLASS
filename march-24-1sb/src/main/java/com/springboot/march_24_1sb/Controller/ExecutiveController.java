@@ -42,7 +42,7 @@ public class ExecutiveController {
 
     @GetMapping("/get")
     public ExecReqDto getAllExecutive(@RequestParam(value = "page",defaultValue = "0",required = false) int page,
-                                    @RequestParam(value = "size",defaultValue = "5",required = false) int size){
+                                      @RequestParam(value = "size",defaultValue = "5",required = false) int size){
         return executiveService.getAllExecutive(page,size);
     }
 }

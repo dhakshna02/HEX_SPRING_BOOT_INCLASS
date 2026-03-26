@@ -53,4 +53,9 @@ public class CustomerService {
                 customerList.getTotalElements()
         );
     }
+
+    public Customer getCustomerByIdIntEnt(long customerid) {
+        return customerRepository.findById(customerid)
+                .orElseThrow(() -> new ResourceNotFound("Invalid id"));
+    }
 }

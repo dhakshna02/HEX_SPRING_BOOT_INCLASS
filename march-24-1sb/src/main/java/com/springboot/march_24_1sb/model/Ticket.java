@@ -42,5 +42,10 @@ public class Ticket {
     @UpdateTimestamp
     private Instant UpdatedAt;
 
+    @ManyToOne
+    private Customer customer;
+
+    @ManyToOne
+    private Executive executive;
 
 }

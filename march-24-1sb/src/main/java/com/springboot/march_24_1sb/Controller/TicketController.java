@@ -1,10 +1,7 @@
 package com.springboot.march_24_1sb.Controller;
 
 import com.springboot.march_24_1sb.Service.TicketService;
-import com.springboot.march_24_1sb.dto.GetFilterDto;
-import com.springboot.march_24_1sb.dto.TicketDto;
-import com.springboot.march_24_1sb.dto.TicketGetDto;
-import com.springboot.march_24_1sb.dto.TicketResDto;
+import com.springboot.march_24_1sb.dto.*;
 import com.springboot.march_24_1sb.model.Ticket;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,14 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/api/ticket")
 public class TicketController {
-
-
     private final TicketService ticketService;
 
 
-    @PostMapping("/insert")
-    public ResponseEntity<?> insert(@Valid @RequestBody  TicketDto ticketDto){
-         ticketService.saveToDb(ticketDto) ;
+    // for relationship adding just add the id to the pathvaribale
+    // beacuse its easy and also i dont want to touch the dto
+    // its easy to send in UI
+    @PostMapping("/insert/{customerid}")
+    public ResponseEntity<?> insert(@Valid @RequestBody  TicketDto ticketDto,
+                                    @PathVariable long customerid){
+         ticketService.saveToDb(ticketDto,customerid) ;
          return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -49,5 +48,24 @@ public class TicketController {
         return ticketService.getTicketUsingFilter(getFilterDto);
     }
 
+
+    //here we add the ticket of the customer now we are going to assign the executive
+    // to that ticket
+    @PutMapping("/insert/{ticketid}/{execid}")
+    public ResponseEntity<?> assignExecutive(@PathVariable long ticketid,
+                                              @PathVariable long execid ){
+
+        ticketService.assignExecutive(ticketid,execid);
+
+        return  ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
+    // Getting all the tickets of the customer in DTO
+
+    @GetMapping("/get-all-by-customer/{customerid}")
+    public List<DtoForGetAllByCustomer_ForRealtionship> getAllTicketsOfCustomer(@PathVariable long customerid){
+       return ticketService.getAllTicketByCustomer(customerid);
+    }
 
 }

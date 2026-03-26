@@ -21,6 +21,7 @@ import java.util.List;
 public class ExecutiveService {
 
     private final ExecutiveRepository executiveRepository;
+
     public void saveExecutive(ExecutiveDto executiveDto) {
 
         Executive executive = ExecutiveMapper.ExecDtoToEnt(executiveDto);
@@ -38,8 +39,6 @@ public class ExecutiveService {
                 executiv.getJobTitle()
         );
     }
-
-
 
     public List<ExecutiveDto> getExecutiveByFilter(String jobTitle) {
 
@@ -70,4 +69,10 @@ public class ExecutiveService {
                TotalElements
        );
     }
+    // Assign the exective to the ticket for that checking the exective exits first
+    public  Executive getExecById(long execid) {
+        return executiveRepository.getById(execid);
+    }
+
+
 }
