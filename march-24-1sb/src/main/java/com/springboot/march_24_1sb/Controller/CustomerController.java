@@ -3,6 +3,7 @@ package com.springboot.march_24_1sb.Controller;
 import com.springboot.march_24_1sb.Service.CustomerService;
 import com.springboot.march_24_1sb.dto.CustomerDto;
 import com.springboot.march_24_1sb.dto.CustomerReqDto;
+import com.springboot.march_24_1sb.dto.CustomerSignUpDto;
 import com.springboot.march_24_1sb.model.Customer;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -40,5 +41,15 @@ public class CustomerController {
     public CustomerReqDto getCustomers(@RequestParam(value = "page", required = false , defaultValue = "0") int page ,
                                        @RequestParam(value = "size", required = false,defaultValue = "5") int size){
         return customerService.getCustomers(page,size);
+    }
+
+
+    // signup feature
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUpCustomer(@Valid @RequestBody CustomerSignUpDto customerSignUpDto){
+
+        customerService.signUpCustomer(customerSignUpDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

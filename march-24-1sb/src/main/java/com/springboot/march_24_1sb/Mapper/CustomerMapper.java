@@ -2,7 +2,9 @@ package com.springboot.march_24_1sb.Mapper;
 
 import com.springboot.march_24_1sb.dto.CustomerDto;
 import com.springboot.march_24_1sb.dto.CustomerReqDto;
+import com.springboot.march_24_1sb.dto.CustomerSignUpDto;
 import com.springboot.march_24_1sb.model.Customer;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @ControllerAdvice
@@ -27,5 +29,14 @@ public class CustomerMapper {
     }
 
 
+    public static Customer CustomerSignUpDtoToEnt(@Valid CustomerSignUpDto customerSignUpDto) {
 
+        Customer customer = new Customer();
+        customer.setName(customerSignUpDto.name());
+        customer.setEmail(customerSignUpDto.email());
+        customer.setCity(customerSignUpDto.city());
+
+        return customer;
+
+    }
 }

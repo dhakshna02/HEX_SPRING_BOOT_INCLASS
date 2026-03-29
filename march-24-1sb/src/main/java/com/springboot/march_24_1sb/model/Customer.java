@@ -21,5 +21,8 @@ public class Customer {
     private String email;
     private String city;
 
+    @OneToOne
+    private Users users;
+
 
 }
