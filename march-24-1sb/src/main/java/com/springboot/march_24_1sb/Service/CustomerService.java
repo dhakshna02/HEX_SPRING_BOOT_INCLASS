@@ -78,8 +78,11 @@ public class CustomerService {
 
         customer.setUsers(users1);
 
-        customerRepository.save(customer);
-
+        try {
+            customerRepository.save(customer);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
 
 
     }
