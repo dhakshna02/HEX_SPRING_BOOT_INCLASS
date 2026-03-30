@@ -25,7 +25,8 @@ public class AuthController {
         System.out.println("api ->works"+principal.getName());
         String loggedin = principal.getName();
         Map<String,String> map = new HashMap<>();
-
+        map.put("token",jwtUtil.generateToken(loggedin));
+        System.out.println(map);
         return ResponseEntity.status(HttpStatus.OK).body(map);
 
     }

@@ -19,7 +19,7 @@ import java.util.function.Function;
 @Component
 public class JWTUtil {
 
-    private String SECRET_KEY = "secret-maja-vao-maja--t";
+    private String SECRET_KEY = "secret-maja-vao-maja--thanna-da-superda";
 
     /*
      * This class does following things
