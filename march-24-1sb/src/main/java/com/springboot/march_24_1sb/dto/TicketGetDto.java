@@ -10,4 +10,5 @@ public record TicketGetDto(
         Long TotalElements
 
 ) {
+
 }

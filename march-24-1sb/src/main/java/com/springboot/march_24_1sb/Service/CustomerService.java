@@ -61,10 +61,17 @@ public class CustomerService {
         );
     }
 
+
+
+
+
     public Customer getCustomerByIdIntEnt(long customerid) {
         return customerRepository.findById(customerid)
                 .orElseThrow(() -> new ResourceNotFound("Invalid id"));
     }
+
+
+
 
     public void signUpCustomer(@Valid CustomerSignUpDto customerSignUpDto) {
         Customer customer = CustomerMapper.CustomerSignUpDtoToEnt(customerSignUpDto);
@@ -85,5 +92,10 @@ public class CustomerService {
         }
 
 
+    }
+
+    public Customer getCustomerByUserName(String name) {
+
+        return customerRepository.getCustomerByUserName(name);
     }
 }

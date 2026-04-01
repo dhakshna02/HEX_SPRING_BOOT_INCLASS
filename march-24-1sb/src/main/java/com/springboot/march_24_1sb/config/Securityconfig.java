@@ -76,6 +76,14 @@ public class Securityconfig {
                             .hasAuthority("CUSTOMER")
                             .requestMatchers("/api/ticket/get-by-id/{id}")
                             .authenticated()
+                            .requestMatchers("api/ticket/insert").hasAuthority("CUSTOMER")
+                            .requestMatchers("/api/ticket/get-all-ticket-using-username").hasAuthority("CUSTOMER")
+                            .requestMatchers("/api/customer/plan/save/{planid}").hasAuthority("CUSTOMER")
+                            .requestMatchers("/api/customer/plan/save/admin/{customerid}/{planid}").hasAuthority("ADMIN")
+                            .requestMatchers("api/ticket/update/{ticketid}").hasAnyAuthority("CUSTOMER","EXECUTIVE")
+                            .requestMatchers("api/ticket/update/jpql/{ticketid}").hasAnyAuthority("CUSTOMER","EXECUTIVE")
+
+                            .anyRequest().permitAll()
                     );
                     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .httpBasic(Customizer.withDefaults());

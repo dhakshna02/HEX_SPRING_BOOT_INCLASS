@@ -3,19 +3,23 @@ package com.springboot.march_24_1sb.Service;
 import com.springboot.march_24_1sb.Mapper.TicketMapper;
 import com.springboot.march_24_1sb.Repository.TicketRepository;
 import com.springboot.march_24_1sb.dto.*;
+import com.springboot.march_24_1sb.enums.Role;
 import com.springboot.march_24_1sb.enums.TicketPriority;
 import com.springboot.march_24_1sb.enums.TicketStatus;
 import com.springboot.march_24_1sb.exception.ResourceNotFound;
+import com.springboot.march_24_1sb.exception.TicketUpdatePermissionException;
 import com.springboot.march_24_1sb.model.Customer;
 import com.springboot.march_24_1sb.model.Executive;
 import com.springboot.march_24_1sb.model.Ticket;
 
+import com.springboot.march_24_1sb.model.Users;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -25,12 +29,13 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final CustomerService customerService;
     private final ExecutiveService executiveService;
+    private final UserService userService;
 
     // save the enity to the ticket
-    public Ticket saveToDb(TicketDto ticketDto, long customerid) {
+    public Ticket saveToDb(TicketDto ticketDto, Principal principal) {
 
         // check weather the customerid exists
-        Customer customerr = customerService.getCustomerByIdIntEnt(customerid);
+        Customer customerr = customerService.getCustomerByUserName(principal.getName());
 
         // if exist add the customer to the ticketEntity
         Ticket ticket =  TicketMapper.dtoToEntityMapper(ticketDto);
@@ -107,6 +112,85 @@ public class TicketService {
                   return ticket.stream()
                                .map(TicketMapper::MapperForGetAllByCustomer_ForRealtionship)
                                .toList();
+
+    }
+
+    // get the customer by using username
+    public List<DtoForGetAllByCustomer_ForRealtionship> getTicketByUserName(String username) {
+
+        List<Ticket> lis = ticketRepository.getTicketByUserName(username);
+
+            return lis.stream().map(TicketMapper :: MapperForGetAllByCustomer_ForRealtionship).toList();
+    }
+
+    // updating the ticket and checking the ownership
+    public void updateTheTicketAndCheckOwnership(String userName, long ticketid, TicketStatus ticketStatus) {
+
+        // check user is valid
+        Users user = (Users) userService.loadUserByUsername(userName);
+
+        // check ticket exists
+        Ticket ticket = ticketRepository.findById( ticketid).orElseThrow(()-> new ResourceNotFound("Ticket Id is invalid"));
+
+
+        // cheking weather the give ticket is actually belongs to the user
+
+        if(user.getRole() == Role.CUSTOMER) {
+            if (ticket.getCustomer().getUsers().getId() != user.getId())
+                throw new TicketUpdatePermissionException("This ticket is not yours");
+        }
+
+        if(user.getRole() == Role.EXECUTIVE){
+            if(ticket.getExecutive().getUsers().getId() != user.getId())
+                throw  new TicketUpdatePermissionException("Executive doesn't own this ticket");
+
+            if(ticket.getExecutive() == null)
+                throw new TicketUpdatePermissionException("Ewextive is not assigned");
+        }
+
+
+
+        ticket.setTicketStatus(ticketStatus);
+        ticketRepository.save(ticket);
+
+
+
+
+    }
+
+
+    // updating the ticket and checking the ownership also updating in jpql
+    public void updateTheTicketAndCheckOwnershipUsingJpql(String name, long ticketid, TicketStatus ticketStatus) {
+
+        // check user is valid
+        Users user = (Users) userService.loadUserByUsername(name);
+
+        // check ticket exists
+        Ticket ticket = ticketRepository.findById( ticketid).orElseThrow(()-> new ResourceNotFound("Ticket Id is invalid"));
+
+
+        // cheking weather the give ticket is actually belongs to the user
+
+        if(user.getRole() == Role.CUSTOMER) {
+            if (ticket.getCustomer().getUsers().getId() != user.getId())
+                throw new TicketUpdatePermissionException("This ticket is not yours");
+        }
+
+        if(user.getRole() == Role.EXECUTIVE){
+            if(ticket.getExecutive().getUsers().getId() != user.getId())
+                throw  new TicketUpdatePermissionException("Executive doesn't own this ticket");
+
+            if(ticket.getExecutive() == null)
+                throw new TicketUpdatePermissionException("Ewextive is not assigned");
+        }
+
+
+
+
+        ticketRepository.updateTheTicketAndCheckOwnershipUsingJpql(ticketStatus,ticketid);
+
+
+
 
     }
 }

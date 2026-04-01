@@ -44,8 +44,8 @@ public class TicketMapper {
                 ticket.getTicketPriority(),
                 ticket.getCreatedAt(),
                 ticket.getCustomer().getName(),
-                ticket.getExecutive().getName(),
-                ticket.getExecutive().getJobTitle()
+                ticket.getExecutive() == null ? null :ticket.getExecutive().getName() ,
+                ticket.getExecutive() == null ? null :ticket.getExecutive().getJobTitle()
         );
 
 
