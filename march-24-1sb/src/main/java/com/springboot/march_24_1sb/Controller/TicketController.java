@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/ticket")
+@CrossOrigin("http://localhost:5173")
 public class TicketController {
     private final TicketService ticketService;
 
@@ -102,7 +103,7 @@ public class TicketController {
     * */
     // updating of ticket
 
-    @PostMapping("/update/{ticketid}")
+    @PutMapping("/update/{ticketid}")
     public ResponseEntity<?> updateTheTicketAndCheckOwnership(Principal principal,
                                                               @PathVariable(value = "ticketid") long ticketid,
                                                               @RequestParam TicketStatus ticketStatus
@@ -130,5 +131,17 @@ public class TicketController {
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
+
+
+    // stat api
+
+    @GetMapping("/stat")
+    public List<StatDto> stat(Principal principal){
+       return ticketService.stat(principal.getName());
+
+
+    }
+
+
 
 }

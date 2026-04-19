@@ -1,6 +1,7 @@
 package com.springboot.march_24_1sb.config;
 
 import com.springboot.march_24_1sb.exception.ResourceNotFound;
+import org.apache.logging.log4j.message.ReusableMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,4 +54,24 @@ public class GlobalException {
         map.put("message",e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeExcepiton(
+            RuntimeException e
+    ){
+        Map<String,Object> map = new HashMap<>();
+        map.put("message",e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<?> handleIOException(
+            IOException e
+    ){
+        Map<String,Object> map = new HashMap<>();
+        map.put("message",e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
+    }
+
 }
+

@@ -104,6 +104,7 @@ public class TicektServiceTest {
         ticket1.setTicketPriority(TicketPriority.LOW);
         ticket1.setTicketStatus(TicketStatus.OPEN);
         ticket1.setCreatedAt(Instant.now());
+
         Ticket ticket2 = new Ticket();
         ticket2.setId(14L);
         ticket2.setSubject("test subject");
@@ -120,14 +121,14 @@ public class TicektServiceTest {
 //        Pageable pageable = PageRequest.of(pagee,size);
 
         // for 0,1
-        Page<Ticket> page2 = new PageImpl<>(list.subList(0,1));
+        Page<Ticket> page2 = new PageImpl<>(list.subList(0,2));
         int pagee1 = 0 ;
-        int size2 = 1;
+        int size2 = 2;
         Pageable pageable1 = PageRequest.of(pagee1,size2);
 
        when(ticketRepository.findAll(pageable1)).thenReturn(page2);
 
-       Assertions.assertEquals(1,ticketService.GetAllTicket(0,1).ticket().size());
+       Assertions.assertEquals(2,ticketService.GetAllTicket(0,2).ticket().size());
        // Assertions.assertEquals(2 , ticketService.GetAllTicket(0,2).ticket().size());
 
     }

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -64,26 +65,33 @@ public class Securityconfig {
                     .csrf(AbstractHttpConfigurer::disable)
                     .cors(Customizer.withDefaults())
                     .authorizeHttpRequests((authorize) -> authorize
-                            .requestMatchers("/api/customer/signup")
-                            .permitAll()
-                            .requestMatchers("/api/auth/login")
-                            .authenticated()
-                            .requestMatchers("/api/customer/get-all")
-                            .permitAll()
-                            .requestMatchers("/api/customer/save")
-                            .permitAll()
-                            .requestMatchers("/api/customer/get-by-id/{id}")
-                            .hasAuthority("CUSTOMER")
-                            .requestMatchers("/api/ticket/get-by-id/{id}")
-                            .authenticated()
+                            .requestMatchers("/api/customer/signup").permitAll()
+                            .requestMatchers("/api/auth/login").authenticated()
+                            .requestMatchers("/api/auth/user-details").authenticated()
+
+                            .requestMatchers("/api/customer/get-one").hasAuthority("CUSTOMER")
+
+                            .requestMatchers("/api/customer/get-all").permitAll()
+                            .requestMatchers("/api/customer/save").permitAll()
+                            .requestMatchers("/api/customer/get-by-id/{id}").hasAuthority("CUSTOMER")
+                            .requestMatchers("/api/ticket/get-by-id/{id}").authenticated()
                             .requestMatchers("api/ticket/insert").hasAuthority("CUSTOMER")
+                            .requestMatchers("api/ticket/stat").hasAuthority("CUSTOMER")
                             .requestMatchers("/api/ticket/get-all-ticket-using-username").hasAuthority("CUSTOMER")
                             .requestMatchers("/api/customer/plan/save/{planid}").hasAuthority("CUSTOMER")
                             .requestMatchers("/api/customer/plan/save/admin/{customerid}/{planid}").hasAuthority("ADMIN")
                             .requestMatchers("api/ticket/update/{ticketid}").hasAnyAuthority("CUSTOMER","EXECUTIVE")
                             .requestMatchers("api/ticket/update/jpql/{ticketid}").hasAnyAuthority("CUSTOMER","EXECUTIVE")
+                                    .requestMatchers("/api/admin/add").permitAll()
 
-                            .anyRequest().permitAll()
+                                    .requestMatchers("/api/customer/getall").hasAuthority("ADMIN")
+                                    .requestMatchers("/api/ticket/get-all-by-customer/{customerid}").hasAuthority("ADMIN")
+
+
+
+                            // document s
+                                    .requestMatchers(HttpMethod.POST,"/api/document/upload").hasAuthority("CUSTOMER")
+//                            .anyRequest().permitAll()
                     );
                     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .httpBasic(Customizer.withDefaults());

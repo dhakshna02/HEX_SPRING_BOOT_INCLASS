@@ -2,6 +2,7 @@ package com.springboot.march_24_1sb.Mapper;
 
 import com.springboot.march_24_1sb.dto.CustomerDto;
 import com.springboot.march_24_1sb.dto.CustomerReqDto;
+import com.springboot.march_24_1sb.dto.CustomerResponseDto;
 import com.springboot.march_24_1sb.dto.CustomerSignUpDto;
 import com.springboot.march_24_1sb.model.Customer;
 import jakarta.validation.Valid;
@@ -38,5 +39,16 @@ public class CustomerMapper {
 
         return customer;
 
+    }
+
+
+
+    public static CustomerResponseDto custEmttoDtoo(Customer customer){
+        return new CustomerResponseDto(
+                customer.getId(),
+                customer.getName(),
+                customer.getEmail(),
+                customer.getCity()
+        );
     }
 }

@@ -193,4 +193,39 @@ public class TicketService {
 
 
     }
+
+    public List<StatDto> stat(String name) {
+
+        List<Ticket> tickets= ticketRepository.getTicketByUserName(name);
+
+        List<Ticket> openTickets = tickets.stream().filter(ticket -> ticket.getTicketStatus().equals(TicketStatus.OPEN))
+                                    .toList();
+
+        List<Ticket> inProgressTicket = tickets.stream().filter(ticket -> ticket.getTicketStatus().equals(TicketStatus.IN_PROGRESS))
+                                        .toList();
+
+        List<Ticket> closedTicket  = tickets.stream().filter(ticket -> ticket.getTicketStatus().equals(TicketStatus.CLOSED)).toList();
+
+
+
+
+        StatDto opendto = new StatDto(
+                "OPEN Tickets",
+                openTickets.size()
+        );
+
+        StatDto inProgress = new StatDto(
+                "IN_PROGRESS Tickets",
+                inProgressTicket.size()
+        );
+
+
+        StatDto closed = new StatDto(
+                "CLOSED Tickets",
+                closedTicket.size()
+        );
+
+
+        return List.of(opendto,inProgress,closed);
+    }
 }
